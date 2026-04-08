@@ -17,6 +17,7 @@ export type Routine = {
   timeSlot: 'morning' | 'afternoon' | 'evening' | 'anytime'
   color: string
   createdAt: string
+  notificationId?: string
 }
 
 export type CheckRecord = {
@@ -30,6 +31,7 @@ type RoutineStore = {
   checkRecords: CheckRecord[]
   addRoutine: (routine: Omit<Routine, 'id' | 'createdAt'>) => void
   removeRoutine: (id: string) => void
+  updateRoutine: (id: string, updates: Partial<Omit<Routine, 'id' | 'createdAt'>>) => void
   toggleCheck: (routineId: string, date: string) => void
   isChecked: (routineId: string, date: string) => boolean
   getStreak: (routineId: string) => number
@@ -56,6 +58,14 @@ export const useRoutineStore = create<RoutineStore>()(
         set((state) => ({
           routines: state.routines.filter((r) => r.id !== id),
           checkRecords: state.checkRecords.filter((c) => c.routineId !== id),
+        }))
+      },
+
+      updateRoutine: (id, updates) => {
+        set((state) => ({
+          routines: state.routines.map((r) =>
+            r.id === id ? { ...r, ...updates } : r
+          ),
         }))
       },
 
@@ -148,3 +158,10 @@ export const useRoutineStore = create<RoutineStore>()(
     }
   )
 )
+
+// 위젯 데이터 자동 동기화
+import { syncWidgetData } from '../utils/widgetBridge'
+
+useRoutineStore.subscribe((state) => {
+  syncWidgetData(state.routines, state.checkRecords)
+})

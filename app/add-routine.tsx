@@ -9,8 +9,9 @@ import {
   ScrollView,
   Alert,
 } from 'react-native'
-import { useRouter } from 'expo-router'
+import { useRouter, useLocalSearchParams } from 'expo-router'
 import { useRoutineStore, Routine } from '../store/routineStore'
+import { useRoutineActions } from '../hooks/useRoutineActions'
 
 const EMOJIS = [
   '🏃', '💪', '🧘', '🚴', '🏊', '⚽',
@@ -33,25 +34,39 @@ const TIME_SLOTS: { key: Routine['timeSlot']; label: string; desc: string }[] = 
 
 export default function AddRoutineScreen() {
   const router = useRouter()
-  const { addRoutine } = useRoutineStore()
+  const { id } = useLocalSearchParams<{ id?: string }>()
+  const { routines } = useRoutineStore()
+  const { addRoutineWithNotification, updateRoutineWithNotification } = useRoutineActions()
 
-  const [name, setName] = useState('')
-  const [selectedEmoji, setSelectedEmoji] = useState('🏃')
-  const [selectedColor, setSelectedColor] = useState('#4ade80')
-  const [selectedSlot, setSelectedSlot] = useState<Routine['timeSlot']>('anytime')
+  const existingRoutine = id ? routines.find((r) => r.id === id) : undefined
+  const isEditing = !!existingRoutine
 
-  const handleSave = () => {
+  const [name, setName] = useState(existingRoutine?.name ?? '')
+  const [selectedEmoji, setSelectedEmoji] = useState(existingRoutine?.emoji ?? '🏃')
+  const [selectedColor, setSelectedColor] = useState(existingRoutine?.color ?? '#4ade80')
+  const [selectedSlot, setSelectedSlot] = useState<Routine['timeSlot']>(existingRoutine?.timeSlot ?? 'anytime')
+
+  const handleSave = async () => {
     if (!name.trim()) {
       Alert.alert('이름을 입력해주세요')
       return
     }
 
-    addRoutine({
-      name: name.trim(),
-      emoji: selectedEmoji,
-      color: selectedColor,
-      timeSlot: selectedSlot,
-    })
+    if (isEditing && id) {
+      await updateRoutineWithNotification(id, {
+        name: name.trim(),
+        emoji: selectedEmoji,
+        color: selectedColor,
+        timeSlot: selectedSlot,
+      })
+    } else {
+      await addRoutineWithNotification({
+        name: name.trim(),
+        emoji: selectedEmoji,
+        color: selectedColor,
+        timeSlot: selectedSlot,
+      })
+    }
 
     router.back()
   }
@@ -68,7 +83,7 @@ export default function AddRoutineScreen() {
           <TouchableOpacity onPress={() => router.back()}>
             <Text style={styles.cancelBtn}>취소</Text>
           </TouchableOpacity>
-          <Text style={styles.title}>새 루틴</Text>
+          <Text style={styles.title}>{isEditing ? '루틴 수정' : '새 루틴'}</Text>
           <TouchableOpacity onPress={handleSave}>
             <Text style={[styles.saveBtn, { color: selectedColor }]}>저장</Text>
           </TouchableOpacity>

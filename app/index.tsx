@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useRoutineStore } from '../store/routineStore'
+import { useRoutineActions } from '../hooks/useRoutineActions'
 import RoutineItem from '../components/RoutineItem'
 import ProgressRing from '../components/ProgressRing'
 import StreakHeatmap from '../components/StreakHeatmap'
@@ -24,21 +25,26 @@ const TIME_SLOTS = [
 
 export default function HomeScreen() {
   const router = useRouter()
-  const { routines, removeRoutine, getTodayProgress, getHeatmapData } = useRoutineStore()
+  const { routines, getTodayProgress, getHeatmapData } = useRoutineStore()
+  const { removeRoutineWithNotification } = useRoutineActions()
   const [selectedRoutineId, setSelectedRoutineId] = useState<string | null>(null)
   const { completed, total } = getTodayProgress()
   const today = getToday()
 
   const handleLongPress = useCallback((id: string) => {
-    Alert.alert('루틴 삭제', '이 루틴을 삭제할까요?', [
+    Alert.alert('루틴 관리', '이 루틴을 어떻게 할까요?', [
       { text: '취소', style: 'cancel' },
+      {
+        text: '수정',
+        onPress: () => router.push(`/add-routine?id=${id}`),
+      },
       {
         text: '삭제',
         style: 'destructive',
-        onPress: () => removeRoutine(id),
+        onPress: () => removeRoutineWithNotification(id),
       },
     ])
-  }, [removeRoutine])
+  }, [removeRoutineWithNotification, router])
 
   const selectedRoutine = routines.find((r) => r.id === selectedRoutineId)
   const heatmapData = selectedRoutineId
@@ -67,12 +73,20 @@ export default function HomeScreen() {
                 : '오늘의 루틴'}
             </Text>
           </View>
-          <TouchableOpacity
-            style={styles.addBtn}
-            onPress={() => router.push('/add-routine')}
-          >
-            <Text style={styles.addBtnText}>+</Text>
-          </TouchableOpacity>
+          <View style={styles.headerButtons}>
+            <TouchableOpacity
+              style={styles.addBtn}
+              onPress={() => router.push('/stats')}
+            >
+              <Text style={styles.addBtnText}>📊</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.addBtn}
+              onPress={() => router.push('/add-routine')}
+            >
+              <Text style={styles.addBtnText}>+</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* 진행률 링 */}
@@ -174,6 +188,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '700',
     marginTop: 2,
+  },
+  headerButtons: {
+    flexDirection: 'row',
+    gap: 8,
   },
   addBtn: {
     width: 44,

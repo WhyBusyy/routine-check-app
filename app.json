@@ -13,7 +13,12 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.routinecheck.app"
+      "bundleIdentifier": "com.routinecheck.app",
+      "entitlements": {
+        "com.apple.security.application-groups": [
+          "group.com.routinecheck.app"
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +27,9 @@
       "package": "com.routinecheck.app"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-asset",
+      "expo-font"
     ]
   }
 }
