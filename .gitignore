@@ -1,7 +1,9 @@
 node_modules/
 .expo/
 dist/
-ios/
+ios/Pods/
+ios/build/
+ios/.xcode.env.local
 android/
 *.jks
 *.p8
