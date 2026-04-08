@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "루틴 체크",
+    "slug": "routine-check-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "routine-check",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#111111"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.routinecheck.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#111111"
+      },
+      "package": "com.routinecheck.app"
+    },
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}
