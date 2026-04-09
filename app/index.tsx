@@ -14,6 +14,7 @@ import { useRoutineActions } from '../hooks/useRoutineActions'
 import RoutineItem from '../components/RoutineItem'
 import ProgressRing from '../components/ProgressRing'
 import StreakHeatmap from '../components/StreakHeatmap'
+import Confetti from '../components/Confetti'
 import { formatDate, getToday } from '../utils/dateUtils'
 
 const TIME_SLOTS = [
@@ -28,8 +29,15 @@ export default function HomeScreen() {
   const { routines, getTodayProgress, getHeatmapData } = useRoutineStore()
   const { removeRoutineWithNotification } = useRoutineActions()
   const [selectedRoutineId, setSelectedRoutineId] = useState<string | null>(null)
+  const [showConfetti, setShowConfetti] = useState(false)
   const { completed, total } = getTodayProgress()
   const today = getToday()
+  const allDone = completed === total && total > 0
+
+  // 전체 완료 시 confetti 표시
+  React.useEffect(() => {
+    if (allDone) setShowConfetti(true)
+  }, [allDone])
 
   const handleLongPress = useCallback((id: string) => {
     Alert.alert('루틴 관리', '이 루틴을 어떻게 할까요?', [
@@ -58,6 +66,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
+      <Confetti visible={showConfetti} onDone={() => setShowConfetti(false)} />
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.content}
@@ -141,6 +150,8 @@ export default function HomeScreen() {
                 <RoutineItem
                   routine={routine}
                   onLongPress={() => handleLongPress(routine.id)}
+                  onEdit={() => router.push(`/add-routine?id=${routine.id}`)}
+                  onDelete={() => removeRoutineWithNotification(routine.id)}
                 />
                 {/* 히트맵 (선택 시 펼침) */}
                 {selectedRoutineId === routine.id && (
