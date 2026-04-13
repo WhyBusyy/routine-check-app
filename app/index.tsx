@@ -138,17 +138,14 @@ export default function HomeScreen() {
           <View key={slot.key} style={styles.slotSection}>
             <Text style={styles.slotTitle}>{slot.label}</Text>
             {slot.routines.map((routine) => (
-              <TouchableOpacity
-                key={routine.id}
-                onPress={() =>
-                  setSelectedRoutineId(
-                    selectedRoutineId === routine.id ? null : routine.id
-                  )
-                }
-                activeOpacity={1}
-              >
+              <View key={routine.id}>
                 <RoutineItem
                   routine={routine}
+                  onTap={() =>
+                    setSelectedRoutineId(
+                      selectedRoutineId === routine.id ? null : routine.id
+                    )
+                  }
                   onLongPress={() => handleLongPress(routine.id)}
                   onEdit={() => router.push(`/add-routine?id=${routine.id}`)}
                   onDelete={() => removeRoutineWithNotification(routine.id)}
@@ -162,7 +159,7 @@ export default function HomeScreen() {
                     />
                   </View>
                 )}
-              </TouchableOpacity>
+              </View>
             ))}
           </View>
         ))}

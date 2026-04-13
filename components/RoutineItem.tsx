@@ -16,6 +16,7 @@ type Props = {
   onLongPress?: () => void
   onEdit?: () => void
   onDelete?: () => void
+  onTap?: () => void
 }
 
 const TIME_SLOT_LABEL: Record<Routine['timeSlot'], string> = {
@@ -25,7 +26,7 @@ const TIME_SLOT_LABEL: Record<Routine['timeSlot'], string> = {
   anytime: '언제든',
 }
 
-export default function RoutineItem({ routine, onLongPress, onEdit, onDelete }: Props) {
+export default function RoutineItem({ routine, onLongPress, onEdit, onDelete, onTap }: Props) {
   const { isChecked, toggleCheck, getStreak } = useRoutineStore()
   const today = getToday()
   const checked = isChecked(routine.id, today)
@@ -90,7 +91,7 @@ export default function RoutineItem({ routine, onLongPress, onEdit, onDelete }: 
       <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={handlePress}
+          onPress={onTap}
           onLongPress={onLongPress}
           style={[
             styles.container,
@@ -98,18 +99,20 @@ export default function RoutineItem({ routine, onLongPress, onEdit, onDelete }: 
           ]}
         >
           <View style={styles.left}>
-            <View
-              style={[
-                styles.checkCircle,
-                checked
-                  ? { backgroundColor: routine.color }
-                  : { backgroundColor: 'transparent', borderColor: '#3a3a3a', borderWidth: 1.5 },
-              ]}
-            >
-              {checked && (
-                <Text style={styles.checkmark}>✓</Text>
-              )}
-            </View>
+            <TouchableOpacity onPress={handlePress} activeOpacity={0.7}>
+              <View
+                style={[
+                  styles.checkCircle,
+                  checked
+                    ? { backgroundColor: routine.color }
+                    : { backgroundColor: 'transparent', borderColor: '#3a3a3a', borderWidth: 1.5 },
+                ]}
+              >
+                {checked && (
+                  <Text style={styles.checkmark}>✓</Text>
+                )}
+              </View>
+            </TouchableOpacity>
 
             <View style={styles.info}>
               <Text style={styles.emoji}>{routine.emoji}</Text>

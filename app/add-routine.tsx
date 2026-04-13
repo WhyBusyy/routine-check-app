@@ -134,23 +134,25 @@ export default function AddRoutineScreen() {
         {/* 색상 선택 */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>색상</Text>
-          <View style={styles.colorRow}>
-            {COLORS.map((color) => (
-              <TouchableOpacity
-                key={color}
-                style={[
-                  styles.colorBtn,
-                  { backgroundColor: color },
-                  selectedColor === color && styles.colorBtnSelected,
-                ]}
-                onPress={() => setSelectedColor(color)}
-              >
-                {selectedColor === color && (
-                  <Text style={styles.colorCheck}>✓</Text>
-                )}
-              </TouchableOpacity>
-            ))}
-          </View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={styles.colorRow}>
+              {COLORS.map((color) => (
+                <TouchableOpacity
+                  key={color}
+                  style={[
+                    styles.colorBtn,
+                    { backgroundColor: color },
+                    selectedColor === color && styles.colorBtnSelected,
+                  ]}
+                  onPress={() => setSelectedColor(color)}
+                >
+                  {selectedColor === color && (
+                    <Text style={styles.colorCheck}>✓</Text>
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
         </View>
 
         {/* 시간대 선택 */}
