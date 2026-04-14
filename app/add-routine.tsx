@@ -105,7 +105,6 @@ export default function AddRoutineScreen() {
             value={name}
             onChangeText={setName}
             maxLength={20}
-            autoFocus
           />
         </View>
 
