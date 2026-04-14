@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Alert,
+  AppState,
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useRoutineStore } from '../store/routineStore'
@@ -30,12 +31,44 @@ export default function HomeScreen() {
   const { removeRoutineWithNotification } = useRoutineActions()
   const [selectedRoutineId, setSelectedRoutineId] = useState<string | null>(null)
   const [showConfetti, setShowConfetti] = useState(false)
+  const [today, setToday] = useState(getToday())
   const { completed, total } = getTodayProgress()
-  const today = getToday()
   const allDone = completed === total && total > 0
 
+  // 날짜 변경 감지: 자정 타이머 + 앱 포그라운드 복귀 시 체크
+  useEffect(() => {
+    const checkDateChange = () => {
+      const current = getToday()
+      setToday((prev) => (prev !== current ? current : prev))
+    }
+
+    // 다음 자정까지 남은 시간 계산 후 타이머 세팅
+    const scheduleNextMidnight = () => {
+      const now = new Date()
+      const nextMidnight = new Date(now)
+      nextMidnight.setHours(24, 0, 5, 0) // 자정 + 5초 여유
+      const msUntilMidnight = nextMidnight.getTime() - now.getTime()
+      return setTimeout(() => {
+        checkDateChange()
+        timer = scheduleNextMidnight()
+      }, msUntilMidnight)
+    }
+
+    let timer = scheduleNextMidnight()
+
+    // 앱이 백그라운드에서 돌아올 때 즉시 체크
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') checkDateChange()
+    })
+
+    return () => {
+      clearTimeout(timer)
+      sub.remove()
+    }
+  }, [])
+
   // 전체 완료 시 confetti 표시
-  React.useEffect(() => {
+  useEffect(() => {
     if (allDone) setShowConfetti(true)
   }, [allDone])
 

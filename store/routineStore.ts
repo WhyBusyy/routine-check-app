@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { MMKV } from 'react-native-mmkv'
+import { toDateString } from '../utils/dateUtils'
 
 const storage = new MMKV()
 
@@ -102,29 +103,27 @@ export const useRoutineStore = create<RoutineStore>()(
 
         if (records.length === 0) return 0
 
-        const today = new Date().toISOString().split('T')[0]
-        let streak = 0
-        let checkDate = new Date()
-
-        // 오늘 또는 어제부터 연속 체크 카운트
-        const todayStr = today
-        const yesterdayStr = new Date(Date.now() - 86400000)
-          .toISOString()
-          .split('T')[0]
+        const todayStr = toDateString(new Date())
+        const yesterday = new Date()
+        yesterday.setDate(yesterday.getDate() - 1)
+        const yesterdayStr = toDateString(yesterday)
 
         if (!records.includes(todayStr) && !records.includes(yesterdayStr)) {
           return 0
         }
 
+        let streak = 0
+        let checkDate = new Date()
+
         if (!records.includes(todayStr)) {
-          checkDate = new Date(Date.now() - 86400000)
+          checkDate.setDate(checkDate.getDate() - 1)
         }
 
         while (true) {
-          const dateStr = checkDate.toISOString().split('T')[0]
+          const dateStr = toDateString(checkDate)
           if (records.includes(dateStr)) {
             streak++
-            checkDate = new Date(checkDate.getTime() - 86400000)
+            checkDate.setDate(checkDate.getDate() - 1)
           } else {
             break
           }
@@ -134,7 +133,7 @@ export const useRoutineStore = create<RoutineStore>()(
       },
 
       getTodayProgress: () => {
-        const today = new Date().toISOString().split('T')[0]
+        const today = toDateString(new Date())
         const total = get().routines.length
         const completed = get().checkRecords.filter((c) => c.date === today).length
         return { completed, total }
@@ -143,9 +142,9 @@ export const useRoutineStore = create<RoutineStore>()(
       getHeatmapData: (routineId, days = 84) => {
         const data: { date: string; count: number }[] = []
         for (let i = days - 1; i >= 0; i--) {
-          const date = new Date(Date.now() - i * 86400000)
-            .toISOString()
-            .split('T')[0]
+          const d = new Date()
+          d.setDate(d.getDate() - i)
+          const date = toDateString(d)
           const checked = get().isChecked(routineId, date) ? 1 : 0
           data.push({ date, count: checked })
         }

@@ -10,6 +10,7 @@ import {
 import { useRouter } from 'expo-router'
 import Svg, { Rect } from 'react-native-svg'
 import { useRoutineStore } from '../store/routineStore'
+import { toDateString, getDateDaysAgo } from '../utils/dateUtils'
 
 type Tab = 'weekly' | 'monthly'
 
@@ -20,12 +21,12 @@ export default function StatsScreen() {
 
   // 주간 데이터: 최근 7일 일별 완료 수
   const weeklyData = Array.from({ length: 7 }, (_, i) => {
-    const date = new Date(Date.now() - (6 - i) * 86400000)
-      .toISOString()
-      .split('T')[0]
+    const d = new Date()
+    d.setDate(d.getDate() - (6 - i))
+    const date = toDateString(d)
     const count = checkRecords.filter((c) => c.date === date).length
     const dayNames = ['일', '월', '화', '수', '목', '금', '토']
-    const dayOfWeek = dayNames[new Date(date + 'T00:00:00').getDay()]
+    const dayOfWeek = dayNames[d.getDay()]
     return { date, count, dayOfWeek }
   })
 
@@ -33,9 +34,9 @@ export default function StatsScreen() {
 
   // 월간 데이터: 최근 30일 히트맵
   const monthlyData = Array.from({ length: 30 }, (_, i) => {
-    const date = new Date(Date.now() - (29 - i) * 86400000)
-      .toISOString()
-      .split('T')[0]
+    const d = new Date()
+    d.setDate(d.getDate() - (29 - i))
+    const date = toDateString(d)
     const count = checkRecords.filter((c) => c.date === date).length
     return { date, count }
   })
@@ -43,9 +44,7 @@ export default function StatsScreen() {
   const maxMonthly = Math.max(...monthlyData.map((d) => d.count), 1)
 
   // 루틴별 완료율 (최근 30일 기준)
-  const thirtyDaysAgo = new Date(Date.now() - 29 * 86400000)
-    .toISOString()
-    .split('T')[0]
+  const thirtyDaysAgo = getDateDaysAgo(29)
 
   const routineStats = routines.map((routine) => {
     const completedDays = checkRecords.filter(
