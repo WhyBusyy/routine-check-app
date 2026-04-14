@@ -2,7 +2,7 @@
   "expo": {
     "name": "루틴 체크",
     "slug": "routine-check-app",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "routine-check",
@@ -30,6 +30,14 @@
       "expo-router",
       "expo-asset",
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "80bde350-d961-42e1-a885-3fb15c022c0f"
+      }
+    }
   }
 }
