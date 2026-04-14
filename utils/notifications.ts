@@ -9,10 +9,10 @@ Notifications.setNotificationHandler({
 })
 
 const TIME_SLOT_HOURS: Record<string, { hour: number; minute: number }> = {
-  morning: { hour: 7, minute: 0 },
-  afternoon: { hour: 12, minute: 0 },
-  evening: { hour: 18, minute: 0 },
-  anytime: { hour: 9, minute: 0 },
+  morning: { hour: 9, minute: 0 },    // 오전 9시
+  afternoon: { hour: 15, minute: 0 }, // 오후 3시
+  evening: { hour: 20, minute: 0 },   // 오후 8시
+  anytime: { hour: 19, minute: 0 },   // 오후 7시
 }
 
 export async function requestPermissions(): Promise<boolean> {

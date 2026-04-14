@@ -26,10 +26,10 @@ const COLORS = [
 ]
 
 const TIME_SLOTS: { key: Routine['timeSlot']; label: string; desc: string }[] = [
-  { key: 'morning', label: '🌅 아침', desc: '기상 ~ 오전' },
-  { key: 'afternoon', label: '☀️ 오후', desc: '점심 ~ 저녁 전' },
-  { key: 'evening', label: '🌙 저녁', desc: '저녁 이후' },
-  { key: 'anytime', label: '⚡ 언제든', desc: '시간 무관' },
+  { key: 'morning', label: '🌅 아침', desc: '오전 9시 알림' },
+  { key: 'afternoon', label: '☀️ 오후', desc: '오후 3시 알림' },
+  { key: 'evening', label: '🌙 저녁', desc: '오후 8시 알림' },
+  { key: 'anytime', label: '⚡ 언제든', desc: '오후 7시 알림' },
 ]
 
 export default function AddRoutineScreen() {
