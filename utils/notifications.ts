@@ -15,6 +15,19 @@ const TIME_SLOT_HOURS: Record<string, { hour: number; minute: number }> = {
   anytime: { hour: 19, minute: 0 },   // 오후 7시
 }
 
+export function getEffectiveTime(
+  timeSlot: string,
+  customTime?: { hour: number; minute: number },
+): { hour: number; minute: number } {
+  return customTime ?? TIME_SLOT_HOURS[timeSlot] ?? TIME_SLOT_HOURS.anytime
+}
+
+export function formatTime(hour: number, minute: number): string {
+  const hh = hour.toString().padStart(2, '0')
+  const mm = minute.toString().padStart(2, '0')
+  return `${hh}:${mm}`
+}
+
 export async function requestPermissions(): Promise<boolean> {
   const { status: existingStatus } = await Notifications.getPermissionsAsync()
   if (existingStatus === 'granted') return true
@@ -27,10 +40,9 @@ export async function scheduleRoutineNotification(
   routineId: string,
   emoji: string,
   name: string,
-  timeSlot: string,
+  hour: number,
+  minute: number,
 ): Promise<string> {
-  const time = TIME_SLOT_HOURS[timeSlot] ?? TIME_SLOT_HOURS.anytime
-
   const id = await Notifications.scheduleNotificationAsync({
     content: {
       title: '루틴 체크',
@@ -39,8 +51,8 @@ export async function scheduleRoutineNotification(
     },
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.DAILY,
-      hour: time.hour,
-      minute: time.minute,
+      hour,
+      minute,
     },
   })
 

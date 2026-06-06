@@ -8,10 +8,13 @@ import {
   SafeAreaView,
   ScrollView,
   Alert,
+  Switch,
 } from 'react-native'
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { useRoutineStore, Routine } from '../store/routineStore'
 import { useRoutineActions } from '../hooks/useRoutineActions'
+import TimePicker from '../components/TimePicker'
+import { getEffectiveTime } from '../utils/notifications'
 
 const EMOJIS = [
   '🏃', '💪', '🧘', '🚴', '🏊', '⚽',
@@ -45,11 +48,26 @@ export default function AddRoutineScreen() {
   const [selectedEmoji, setSelectedEmoji] = useState(existingRoutine?.emoji ?? '🏃')
   const [selectedColor, setSelectedColor] = useState(existingRoutine?.color ?? '#4ade80')
   const [selectedSlot, setSelectedSlot] = useState<Routine['timeSlot']>(existingRoutine?.timeSlot ?? 'anytime')
+  const [notificationEnabled, setNotificationEnabled] = useState(
+    existingRoutine?.notificationEnabled ?? true,
+  )
+  const [useCustomTime, setUseCustomTime] = useState(
+    !!existingRoutine?.customTime,
+  )
+  const [customTime, setCustomTime] = useState(
+    existingRoutine?.customTime ??
+      getEffectiveTime(existingRoutine?.timeSlot ?? 'anytime', undefined),
+  )
 
   const handleSave = async () => {
     if (!name.trim()) {
       Alert.alert('이름을 입력해주세요')
       return
+    }
+
+    const notificationFields = {
+      notificationEnabled,
+      customTime: useCustomTime ? customTime : undefined,
     }
 
     if (isEditing && id) {
@@ -58,6 +76,7 @@ export default function AddRoutineScreen() {
         emoji: selectedEmoji,
         color: selectedColor,
         timeSlot: selectedSlot,
+        ...notificationFields,
       })
     } else {
       await addRoutineWithNotification({
@@ -65,6 +84,7 @@ export default function AddRoutineScreen() {
         emoji: selectedEmoji,
         color: selectedColor,
         timeSlot: selectedSlot,
+        ...notificationFields,
       })
     }
 
@@ -177,6 +197,65 @@ export default function AddRoutineScreen() {
           </View>
         </View>
 
+        {/* 알림 설정 */}
+        <View style={styles.section}>
+          <View style={styles.notiHeader}>
+            <Text style={styles.sectionTitle}>알림</Text>
+            <Switch
+              value={notificationEnabled}
+              onValueChange={setNotificationEnabled}
+              trackColor={{ false: '#333', true: selectedColor }}
+              thumbColor="#fff"
+            />
+          </View>
+
+          {notificationEnabled && (
+            <>
+              <View style={styles.notiModeRow}>
+                <TouchableOpacity
+                  style={[
+                    styles.notiModeBtn,
+                    !useCustomTime && {
+                      borderColor: selectedColor,
+                      backgroundColor: selectedColor + '15',
+                    },
+                  ]}
+                  onPress={() => setUseCustomTime(false)}
+                >
+                  <Text style={styles.notiModeLabel}>슬롯 기본 시간</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.notiModeBtn,
+                    useCustomTime && {
+                      borderColor: selectedColor,
+                      backgroundColor: selectedColor + '15',
+                    },
+                  ]}
+                  onPress={() => {
+                    if (!useCustomTime) {
+                      setCustomTime(getEffectiveTime(selectedSlot, undefined))
+                    }
+                    setUseCustomTime(true)
+                  }}
+                >
+                  <Text style={styles.notiModeLabel}>직접 지정</Text>
+                </TouchableOpacity>
+              </View>
+
+              {useCustomTime && (
+                <View style={styles.notiPickerWrap}>
+                  <TimePicker
+                    value={customTime}
+                    onChange={setCustomTime}
+                    color={selectedColor}
+                  />
+                </View>
+              )}
+            </>
+          )}
+        </View>
+
         <View style={{ height: 40 }} />
       </ScrollView>
     </SafeAreaView>
@@ -272,4 +351,31 @@ const styles = StyleSheet.create({
   },
   slotLabel: { color: '#fff', fontSize: 15, fontWeight: '500' },
   slotDesc: { color: '#555', fontSize: 12, marginTop: 4 },
+  notiHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  notiModeRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  notiModeBtn: {
+    flex: 1,
+    backgroundColor: '#1a1a1a',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#2a2a2a',
+    padding: 14,
+    alignItems: 'center',
+  },
+  notiModeLabel: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  notiPickerWrap: {
+    marginTop: 12,
+  },
 })
