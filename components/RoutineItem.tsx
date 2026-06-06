@@ -10,6 +10,8 @@ import { Swipeable } from 'react-native-gesture-handler'
 import * as Haptics from 'expo-haptics'
 import { useRoutineStore, Routine } from '../store/routineStore'
 import { getToday, streakEmoji } from '../utils/dateUtils'
+import { useRoutineActions } from '../hooks/useRoutineActions'
+import { getEffectiveTime, formatTime } from '../utils/notifications'
 
 type Props = {
   routine: Routine
@@ -31,6 +33,8 @@ export default function RoutineItem({ routine, onLongPress, onEdit, onDelete, on
   const today = getToday()
   const checked = isChecked(routine.id, today)
   const streak = getStreak(routine.id)
+  const { toggleRoutineNotification } = useRoutineActions()
+  const effectiveTime = getEffectiveTime(routine.timeSlot, routine.customTime)
 
   const scaleAnim = useRef(new Animated.Value(1)).current
   const swipeableRef = useRef<Swipeable>(null)
@@ -57,6 +61,11 @@ export default function RoutineItem({ routine, onLongPress, onEdit, onDelete, on
 
     toggleCheck(routine.id, today)
   }, [checked, routine.id, today])
+
+  const handleBellPress = useCallback(() => {
+    Haptics.selectionAsync()
+    toggleRoutineNotification(routine.id)
+  }, [routine.id, toggleRoutineNotification])
 
   const renderRightActions = () => (
     <View style={styles.swipeActions}>
@@ -127,17 +136,27 @@ export default function RoutineItem({ routine, onLongPress, onEdit, onDelete, on
                 </Text>
                 <Text style={styles.timeSlot}>
                   {TIME_SLOT_LABEL[routine.timeSlot]}
+                  {routine.notificationEnabled
+                    ? ` · ${formatTime(effectiveTime.hour, effectiveTime.minute)}`
+                    : ' · 알림 꺼짐'}
                 </Text>
               </View>
             </View>
           </View>
 
-          {streak > 0 && (
-            <View style={styles.streak}>
-              <Text style={styles.streakEmoji}>{streakEmoji(streak)}</Text>
-              <Text style={styles.streakCount}>{streak}일</Text>
-            </View>
-          )}
+          <View style={styles.right}>
+            {streak > 0 && (
+              <View style={styles.streak}>
+                <Text style={styles.streakEmoji}>{streakEmoji(streak)}</Text>
+                <Text style={styles.streakCount}>{streak}일</Text>
+              </View>
+            )}
+            <TouchableOpacity onPress={handleBellPress} hitSlop={8}>
+              <Text style={styles.bell}>
+                {routine.notificationEnabled ? '🔔' : '🔕'}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </TouchableOpacity>
       </Animated.View>
     </Swipeable>
@@ -190,6 +209,14 @@ const styles = StyleSheet.create({
     color: '#666',
     fontSize: 12,
     marginTop: 2,
+  },
+  right: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  bell: {
+    fontSize: 20,
   },
   streak: {
     alignItems: 'center',
