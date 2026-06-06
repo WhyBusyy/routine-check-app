@@ -18,7 +18,9 @@ export type Routine = {
   timeSlot: 'morning' | 'afternoon' | 'evening' | 'anytime'
   color: string
   createdAt: string
+  notificationEnabled: boolean
   notificationId?: string
+  customTime?: { hour: number; minute: number }
 }
 
 export type CheckRecord = {
@@ -154,6 +156,19 @@ export const useRoutineStore = create<RoutineStore>()(
     {
       name: 'routine-store',
       storage: createJSONStorage(() => mmkvStorage),
+      version: 1,
+      migrate: (persisted: any, version: number) => {
+        if (version === 0 && persisted?.routines) {
+          return {
+            ...persisted,
+            routines: persisted.routines.map((r: any) => ({
+              notificationEnabled: true,
+              ...r,
+            })),
+          } as RoutineStore
+        }
+        return persisted as RoutineStore
+      },
     }
   )
 )
