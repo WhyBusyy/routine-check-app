@@ -80,6 +80,9 @@ const en = {
     legendLow: 'Low',
     legendHigh: 'High',
   },
+  editHistory: {
+    title: 'Edit history',
+  },
   paywall: {
     title: 'Routine Check Pro',
     subtitle: 'Deeper analytics and custom features\nto level up your routine management',

@@ -76,6 +76,9 @@ const locale = {
     legendLow: 'Thấp',
     legendHigh: 'Cao',
   },
+  editHistory: {
+    title: 'Chỉnh sửa lịch sử',
+  },
   paywall: {
     title: 'Routine Check Pro', // REVIEW: brand name kept in English
     subtitle: 'Phân tích sâu hơn và tính năng tùy chỉnh\nđể nâng tầm quản lý thói quen của bạn',

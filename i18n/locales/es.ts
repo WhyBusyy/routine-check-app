@@ -76,6 +76,9 @@ const locale = {
     legendLow: 'Bajo',
     legendHigh: 'Alto',
   },
+  editHistory: {
+    title: 'Editar historial',
+  },
   paywall: {
     title: 'Routine Check Pro', // REVIEW
     subtitle: 'Análisis más profundos y funciones personalizadas\npara llevar tu rutina al siguiente nivel',

@@ -76,6 +76,9 @@ const locale = {
     legendLow: 'Wenig',
     legendHigh: 'Viel',
   },
+  editHistory: {
+    title: 'Verlauf bearbeiten',
+  },
   paywall: {
     title: 'Routine Check Pro', // REVIEW: App-Name — ggf. lokalisieren
     subtitle: 'Tiefere Analysen und individuelle Funktionen\nfür dein Routinen-Management auf dem nächsten Level',

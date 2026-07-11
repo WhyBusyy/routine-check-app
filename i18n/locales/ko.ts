@@ -81,6 +81,9 @@ const ko = {
     legendLow: '적음',
     legendHigh: '많음',
   },
+  editHistory: {
+    title: '이력 수정',
+  },
   paywall: {
     title: '루틴 체크 Pro',
     subtitle: '더 깊은 분석과 커스텀 기능으로\n루틴 관리를 한 단계 업그레이드',

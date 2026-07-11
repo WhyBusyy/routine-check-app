@@ -76,6 +76,9 @@ const locale = {
     legendLow: 'Faible',
     legendHigh: 'Élevé',
   },
+  editHistory: {
+    title: "Modifier l'historique",
+  },
   paywall: {
     title: 'Routine Check Pro', // REVIEW
     subtitle: 'Analyses approfondies et fonctions personnalisées\npour passer votre gestion de routine au niveau supérieur',

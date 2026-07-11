@@ -76,6 +76,9 @@ const locale = {
     legendLow: 'Rendah',
     legendHigh: 'Tinggi',
   },
+  editHistory: {
+    title: 'Edit riwayat',
+  },
   paywall: {
     title: 'Routine Check Pro', // REVIEW: brand name kept in English
     subtitle: 'Analitik lebih mendalam dan fitur kustom\nuntuk tingkatkan manajemen rutinitasmu',

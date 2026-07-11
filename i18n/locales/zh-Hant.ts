@@ -76,6 +76,9 @@ const locale = {
     legendLow: '少',
     legendHigh: '多',
   },
+  editHistory: {
+    title: '編輯記錄',
+  },
   paywall: {
     title: '習慣打卡 Pro', // REVIEW: app brand name — "習慣打卡 Pro" chosen as natural Traditional Chinese equivalent; mark for brand review
     subtitle: '更深入的分析與自訂功能\n讓你的習慣管理更上一層樓',

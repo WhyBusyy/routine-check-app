@@ -76,6 +76,9 @@ const locale = {
     legendLow: '少ない',
     legendHigh: '多い',
   },
+  editHistory: {
+    title: '履歴を編集',
+  },
   paywall: {
     title: 'ルーティンチェック Pro', // REVIEW: app brand name — "ルーティンチェック" vs keeping "Routine Check" as-is
     subtitle: 'より深い分析とカスタム機能で\nルーティン管理を次のレベルへ',

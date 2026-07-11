@@ -76,6 +76,9 @@ const locale = {
     legendLow: 'Basso',
     legendHigh: 'Alto',
   },
+  editHistory: {
+    title: 'Modifica cronologia',
+  },
   paywall: {
     title: 'Routine Check Pro', // REVIEW
     subtitle: 'Analisi approfondite e funzioni personalizzate\nper portare la tua routine al livello successivo',

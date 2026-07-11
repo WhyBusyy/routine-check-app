@@ -76,6 +76,9 @@ const locale = {
     legendLow: '少',
     legendHigh: '多',
   },
+  editHistory: {
+    title: '编辑记录',
+  },
   paywall: {
     title: '习惯打卡 Pro', // REVIEW: app brand name — "习惯打卡 Pro" vs "例程打卡 Pro"; chose 习惯打卡 as more natural for habit-tracker app
     subtitle: '更深入的分析与自定义功能\n让你的习惯管理更上一层楼',

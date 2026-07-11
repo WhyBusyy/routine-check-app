@@ -86,6 +86,9 @@ const locale = {
     legendLow: 'Мало',
     legendHigh: 'Много',
   },
+  editHistory: {
+    title: 'Изменить историю',
+  },
   paywall: {
     title: 'Routine Check Pro', // REVIEW: Оставлено на английском как название продукта
     subtitle: 'Глубокая аналитика и дополнительные функции\nдля вашей системы привычек',
