@@ -45,6 +45,22 @@ const en = {
     notiCustom: 'Custom time',
     nameRequired: 'Please enter a name',
   },
+  stats: {
+    title: 'Stats',
+    back: '← Back',
+    totalChecks: '30-day checks',
+    avgPerDay: 'Daily avg',
+    routineCount: 'Routines',
+    weekly: 'Weekly',
+    monthly: 'Monthly',
+    weeklyChartTitle: 'Last 7 days',
+    monthlyChartTitle: 'Last 30 days',
+    legendLow: 'Low',
+    legendHigh: 'High',
+    routineRateTitle: 'Completion rate (30d)',
+    emptyStats: 'Add routines to see your stats',
+    dayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+  },
 }
 
 export default en

@@ -46,6 +46,22 @@ const ko = {
     notiCustom: '직접 지정',
     nameRequired: '이름을 입력해주세요',
   },
+  stats: {
+    title: '통계',
+    back: '← 돌아가기',
+    totalChecks: '30일 총 체크',
+    avgPerDay: '일 평균',
+    routineCount: '루틴 수',
+    weekly: '주간',
+    monthly: '월간',
+    weeklyChartTitle: '최근 7일 완료 수',
+    monthlyChartTitle: '최근 30일 활동',
+    legendLow: '적음',
+    legendHigh: '많음',
+    routineRateTitle: '루틴별 달성률 (30일)',
+    emptyStats: '루틴을 추가하면 통계가 표시됩니다',
+    dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+  },
 }
 
 export default ko

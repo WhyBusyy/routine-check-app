@@ -11,6 +11,7 @@ import { useRouter } from 'expo-router'
 import Svg, { Rect } from 'react-native-svg'
 import { useRoutineStore } from '../store/routineStore'
 import { toDateString, getDateDaysAgo } from '../utils/dateUtils'
+import { t, i18n } from '../i18n'
 
 type Tab = 'weekly' | 'monthly'
 
@@ -20,13 +21,14 @@ export default function StatsScreen() {
   const [tab, setTab] = useState<Tab>('weekly')
 
   // 주간 데이터: 최근 7일 일별 완료 수
+  // NOTE(T8): 요일 이름은 stats.dayNames 배열로 관리; T8에서 Intl 기반으로 교체 예정
+  const localizedDayNames = i18n.t('stats.dayNames', { returnObjects: true }) as string[]
   const weeklyData = Array.from({ length: 7 }, (_, i) => {
     const d = new Date()
     d.setDate(d.getDate() - (6 - i))
     const date = toDateString(d)
     const count = checkRecords.filter((c) => c.date === date).length
-    const dayNames = ['일', '월', '화', '수', '목', '금', '토']
-    const dayOfWeek = dayNames[d.getDay()]
+    const dayOfWeek = localizedDayNames[d.getDay()] ?? ''
     return { date, count, dayOfWeek }
   })
 
@@ -70,9 +72,9 @@ export default function StatsScreen() {
         {/* 헤더 */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()}>
-            <Text style={styles.backBtn}>← 돌아가기</Text>
+            <Text style={styles.backBtn}>{t('stats.back')}</Text>
           </TouchableOpacity>
-          <Text style={styles.title}>통계</Text>
+          <Text style={styles.title}>{t('stats.title')}</Text>
           <View style={{ width: 80 }} />
         </View>
 
@@ -80,15 +82,15 @@ export default function StatsScreen() {
         <View style={styles.summaryRow}>
           <View style={styles.summaryCard}>
             <Text style={styles.summaryValue}>{totalChecks}</Text>
-            <Text style={styles.summaryLabel}>30일 총 체크</Text>
+            <Text style={styles.summaryLabel}>{t('stats.totalChecks')}</Text>
           </View>
           <View style={styles.summaryCard}>
             <Text style={styles.summaryValue}>{avgPerDay}</Text>
-            <Text style={styles.summaryLabel}>일 평균</Text>
+            <Text style={styles.summaryLabel}>{t('stats.avgPerDay')}</Text>
           </View>
           <View style={styles.summaryCard}>
             <Text style={styles.summaryValue}>{routines.length}</Text>
-            <Text style={styles.summaryLabel}>루틴 수</Text>
+            <Text style={styles.summaryLabel}>{t('stats.routineCount')}</Text>
           </View>
         </View>
 
@@ -99,7 +101,7 @@ export default function StatsScreen() {
             onPress={() => setTab('weekly')}
           >
             <Text style={[styles.tabText, tab === 'weekly' && styles.tabTextActive]}>
-              주간
+              {t('stats.weekly')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -107,7 +109,7 @@ export default function StatsScreen() {
             onPress={() => setTab('monthly')}
           >
             <Text style={[styles.tabText, tab === 'monthly' && styles.tabTextActive]}>
-              월간
+              {t('stats.monthly')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -115,7 +117,7 @@ export default function StatsScreen() {
         {/* 주간 바 차트 */}
         {tab === 'weekly' && (
           <View style={styles.chartCard}>
-            <Text style={styles.chartTitle}>최근 7일 완료 수</Text>
+            <Text style={styles.chartTitle}>{t('stats.weeklyChartTitle')}</Text>
             <Svg width="100%" height={160} viewBox="0 0 280 160">
               {weeklyData.map((d, i) => {
                 const barHeight = (d.count / maxWeekly) * 110
@@ -159,7 +161,7 @@ export default function StatsScreen() {
         {/* 월간 히트맵 */}
         {tab === 'monthly' && (
           <View style={styles.chartCard}>
-            <Text style={styles.chartTitle}>최근 30일 활동</Text>
+            <Text style={styles.chartTitle}>{t('stats.monthlyChartTitle')}</Text>
             <View style={styles.heatmapGrid}>
               {monthlyData.map((d) => (
                 <View
@@ -174,7 +176,7 @@ export default function StatsScreen() {
               ))}
             </View>
             <View style={styles.heatmapLegend}>
-              <Text style={styles.legendText}>적음</Text>
+              <Text style={styles.legendText}>{t('stats.legendLow')}</Text>
               {[0, 0.3, 0.6, 1].map((op, i) => (
                 <View
                   key={i}
@@ -186,14 +188,14 @@ export default function StatsScreen() {
                   ]}
                 />
               ))}
-              <Text style={styles.legendText}>많음</Text>
+              <Text style={styles.legendText}>{t('stats.legendHigh')}</Text>
             </View>
           </View>
         )}
 
         {/* 루틴별 완료율 */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>루틴별 달성률 (30일)</Text>
+          <Text style={styles.sectionTitle}>{t('stats.routineRateTitle')}</Text>
           {routineStats.map((routine) => (
             <View key={routine.id} style={styles.routineStatRow}>
               <View style={styles.routineStatLeft}>
@@ -219,7 +221,7 @@ export default function StatsScreen() {
             </View>
           ))}
           {routineStats.length === 0 && (
-            <Text style={styles.emptyText}>루틴을 추가하면 통계가 표시됩니다</Text>
+            <Text style={styles.emptyText}>{t('stats.emptyStats')}</Text>
           )}
         </View>
 
