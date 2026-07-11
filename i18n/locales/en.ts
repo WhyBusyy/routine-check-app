@@ -27,6 +27,24 @@ const en = {
     manageTitle: 'Manage routine',
     manageMessage: 'What would you like to do?',
   },
+  addRoutine: {
+    editTitle: 'Edit routine',
+    newTitle: 'New routine',
+    namePreview: 'Routine name',
+    sectionName: 'Name',
+    sectionEmoji: 'Emoji',
+    sectionColor: 'Color',
+    sectionSlot: 'Time of day',
+    sectionNotification: 'Notifications',
+    namePlaceholder: 'e.g. Drink 2L of water',
+    slotDescMorning: 'Wake-up to noon',
+    slotDescAfternoon: 'Noon to evening',
+    slotDescEvening: 'After evening',
+    slotDescAnytime: 'Any time',
+    notiSlotDefault: 'Slot default time',
+    notiCustom: 'Custom time',
+    nameRequired: 'Please enter a name',
+  },
 }
 
 export default en

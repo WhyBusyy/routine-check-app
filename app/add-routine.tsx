@@ -15,6 +15,7 @@ import { useRoutineStore, Routine } from '../store/routineStore'
 import { useRoutineActions } from '../hooks/useRoutineActions'
 import TimePicker from '../components/TimePicker'
 import { getEffectiveTime } from '../utils/notifications'
+import { t } from '../i18n'
 
 const EMOJIS = [
   '🏃', '💪', '🧘', '🚴', '🏊', '⚽',
@@ -28,11 +29,11 @@ const COLORS = [
   '#a78bfa', '#34d399', '#fbbf24', '#f87171',
 ]
 
-const TIME_SLOTS: { key: Routine['timeSlot']; label: string; desc: string }[] = [
-  { key: 'morning', label: '🌅 아침', desc: '기상 ~ 오전' },
-  { key: 'afternoon', label: '☀️ 오후', desc: '점심 ~ 저녁 전' },
-  { key: 'evening', label: '🌙 저녁', desc: '저녁 이후' },
-  { key: 'anytime', label: '⚡ 언제든', desc: '시간 무관' },
+const TIME_SLOTS: { key: Routine['timeSlot']; labelKey: string; descKey: string }[] = [
+  { key: 'morning', labelKey: 'home.slotMorning', descKey: 'addRoutine.slotDescMorning' },
+  { key: 'afternoon', labelKey: 'home.slotAfternoon', descKey: 'addRoutine.slotDescAfternoon' },
+  { key: 'evening', labelKey: 'home.slotEvening', descKey: 'addRoutine.slotDescEvening' },
+  { key: 'anytime', labelKey: 'home.slotAnytime', descKey: 'addRoutine.slotDescAnytime' },
 ]
 
 export default function AddRoutineScreen() {
@@ -61,7 +62,7 @@ export default function AddRoutineScreen() {
 
   const handleSave = async () => {
     if (!name.trim()) {
-      Alert.alert('이름을 입력해주세요')
+      Alert.alert(t('addRoutine.nameRequired'))
       return
     }
 
@@ -101,26 +102,26 @@ export default function AddRoutineScreen() {
         {/* 헤더 */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()}>
-            <Text style={styles.cancelBtn}>취소</Text>
+            <Text style={styles.cancelBtn}>{t('common.cancel')}</Text>
           </TouchableOpacity>
-          <Text style={styles.title}>{isEditing ? '루틴 수정' : '새 루틴'}</Text>
+          <Text style={styles.title}>{isEditing ? t('addRoutine.editTitle') : t('addRoutine.newTitle')}</Text>
           <TouchableOpacity onPress={handleSave}>
-            <Text style={[styles.saveBtn, { color: selectedColor }]}>저장</Text>
+            <Text style={[styles.saveBtn, { color: selectedColor }]}>{t('common.save')}</Text>
           </TouchableOpacity>
         </View>
 
         {/* 미리보기 */}
         <View style={[styles.preview, { borderColor: selectedColor }]}>
           <Text style={styles.previewEmoji}>{selectedEmoji}</Text>
-          <Text style={styles.previewName}>{name || '루틴 이름'}</Text>
+          <Text style={styles.previewName}>{name || t('addRoutine.namePreview')}</Text>
         </View>
 
         {/* 루틴 이름 */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>이름</Text>
+          <Text style={styles.sectionTitle}>{t('addRoutine.sectionName')}</Text>
           <TextInput
             style={styles.input}
-            placeholder="예: 물 2L 마시기"
+            placeholder={t('addRoutine.namePlaceholder')}
             placeholderTextColor="#444"
             value={name}
             onChangeText={setName}
@@ -130,7 +131,7 @@ export default function AddRoutineScreen() {
 
         {/* 이모지 선택 */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>이모지</Text>
+          <Text style={styles.sectionTitle}>{t('addRoutine.sectionEmoji')}</Text>
           <View style={styles.emojiGrid}>
             {EMOJIS.map((emoji) => (
               <TouchableOpacity
@@ -152,7 +153,7 @@ export default function AddRoutineScreen() {
 
         {/* 색상 선택 */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>색상</Text>
+          <Text style={styles.sectionTitle}>{t('addRoutine.sectionColor')}</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View style={styles.colorRow}>
               {COLORS.map((color) => (
@@ -176,7 +177,7 @@ export default function AddRoutineScreen() {
 
         {/* 시간대 선택 */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>시간대</Text>
+          <Text style={styles.sectionTitle}>{t('addRoutine.sectionSlot')}</Text>
           <View style={styles.slotGrid}>
             {TIME_SLOTS.map((slot) => (
               <TouchableOpacity
@@ -190,8 +191,8 @@ export default function AddRoutineScreen() {
                 ]}
                 onPress={() => setSelectedSlot(slot.key)}
               >
-                <Text style={styles.slotLabel}>{slot.label}</Text>
-                <Text style={styles.slotDesc}>{slot.desc}</Text>
+                <Text style={styles.slotLabel}>{t(slot.labelKey)}</Text>
+                <Text style={styles.slotDesc}>{t(slot.descKey)}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -200,7 +201,7 @@ export default function AddRoutineScreen() {
         {/* 알림 설정 */}
         <View style={styles.section}>
           <View style={styles.notiHeader}>
-            <Text style={styles.sectionTitle}>알림</Text>
+            <Text style={styles.sectionTitle}>{t('addRoutine.sectionNotification')}</Text>
             <Switch
               value={notificationEnabled}
               onValueChange={setNotificationEnabled}
@@ -222,7 +223,7 @@ export default function AddRoutineScreen() {
                   ]}
                   onPress={() => setUseCustomTime(false)}
                 >
-                  <Text style={styles.notiModeLabel}>슬롯 기본 시간</Text>
+                  <Text style={styles.notiModeLabel}>{t('addRoutine.notiSlotDefault')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[
@@ -239,7 +240,7 @@ export default function AddRoutineScreen() {
                     setUseCustomTime(true)
                   }}
                 >
-                  <Text style={styles.notiModeLabel}>직접 지정</Text>
+                  <Text style={styles.notiModeLabel}>{t('addRoutine.notiCustom')}</Text>
                 </TouchableOpacity>
               </View>
 

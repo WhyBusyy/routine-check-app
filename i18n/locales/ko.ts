@@ -28,6 +28,24 @@ const ko = {
     manageTitle: '루틴 관리',
     manageMessage: '이 루틴을 어떻게 할까요?',
   },
+  addRoutine: {
+    editTitle: '루틴 수정',
+    newTitle: '새 루틴',
+    namePreview: '루틴 이름',
+    sectionName: '이름',
+    sectionEmoji: '이모지',
+    sectionColor: '색상',
+    sectionSlot: '시간대',
+    sectionNotification: '알림',
+    namePlaceholder: '예: 물 2L 마시기',
+    slotDescMorning: '기상 ~ 오전',
+    slotDescAfternoon: '점심 ~ 저녁 전',
+    slotDescEvening: '저녁 이후',
+    slotDescAnytime: '시간 무관',
+    notiSlotDefault: '슬롯 기본 시간',
+    notiCustom: '직접 지정',
+    nameRequired: '이름을 입력해주세요',
+  },
 }
 
 export default ko
