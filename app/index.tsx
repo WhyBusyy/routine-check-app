@@ -17,12 +17,13 @@ import ProgressRing from '../components/ProgressRing'
 import StreakHeatmap from '../components/StreakHeatmap'
 import Confetti from '../components/Confetti'
 import { formatDate, getToday } from '../utils/dateUtils'
+import { t } from '../i18n'
 
 const TIME_SLOTS = [
-  { key: 'morning', label: '🌅 아침' },
-  { key: 'afternoon', label: '☀️ 오후' },
-  { key: 'evening', label: '🌙 저녁' },
-  { key: 'anytime', label: '⚡ 언제든' },
+  { key: 'morning', labelKey: 'home.slotMorning' as const },
+  { key: 'afternoon', labelKey: 'home.slotAfternoon' as const },
+  { key: 'evening', labelKey: 'home.slotEvening' as const },
+  { key: 'anytime', labelKey: 'home.slotAnytime' as const },
 ] as const
 
 export default function HomeScreen() {
@@ -73,14 +74,14 @@ export default function HomeScreen() {
   }, [allDone])
 
   const handleLongPress = useCallback((id: string) => {
-    Alert.alert('루틴 관리', '이 루틴을 어떻게 할까요?', [
-      { text: '취소', style: 'cancel' },
+    Alert.alert(t('home.manageTitle'), t('home.manageMessage'), [
+      { text: t('common.cancel'), style: 'cancel' },
       {
-        text: '수정',
+        text: t('common.edit'),
         onPress: () => router.push(`/add-routine?id=${id}`),
       },
       {
-        text: '삭제',
+        text: t('common.delete'),
         style: 'destructive',
         onPress: () => removeRoutineWithNotification(id),
       },
@@ -94,6 +95,7 @@ export default function HomeScreen() {
 
   const routinesBySlot = TIME_SLOTS.map((slot) => ({
     ...slot,
+    label: t(slot.labelKey),
     routines: routines.filter((r) => r.timeSlot === slot.key),
   })).filter((slot) => slot.routines.length > 0)
 
@@ -111,11 +113,17 @@ export default function HomeScreen() {
             <Text style={styles.dateText}>{formatDate(today)}</Text>
             <Text style={styles.greeting}>
               {completed === total && total > 0
-                ? '오늘 루틴 완료! 🎉'
-                : '오늘의 루틴'}
+                ? t('home.greetingDone')
+                : t('home.greeting')}
             </Text>
           </View>
           <View style={styles.headerButtons}>
+            <TouchableOpacity
+              style={styles.addBtn}
+              onPress={() => router.push('/settings')}
+            >
+              <Text style={styles.addBtnText}>⚙️</Text>
+            </TouchableOpacity>
             <TouchableOpacity
               style={styles.addBtn}
               onPress={() => router.push('/stats')}
@@ -136,13 +144,13 @@ export default function HomeScreen() {
           <View style={styles.progressSection}>
             <ProgressRing completed={completed} total={total} size={130} />
             <View style={styles.progressInfo}>
-              <Text style={styles.progressTitle}>오늘 달성률</Text>
+              <Text style={styles.progressTitle}>{t('home.todayRate')}</Text>
               <Text style={styles.progressDesc}>
-                {total - completed}개 남았어요
+                {t('home.remaining', { count: total - completed })}
               </Text>
               {completed > 0 && (
                 <Text style={styles.progressMotivation}>
-                  {completed === total ? '완벽해요! 💯' : '잘 하고 있어요 💪'}
+                  {completed === total ? t('home.motivationPerfect') : t('home.motivationGood')}
                 </Text>
               )}
             </View>
@@ -153,15 +161,15 @@ export default function HomeScreen() {
         {routines.length === 0 && (
           <View style={styles.emptyState}>
             <Text style={styles.emptyEmoji}>✨</Text>
-            <Text style={styles.emptyTitle}>루틴을 추가해보세요</Text>
+            <Text style={styles.emptyTitle}>{t('home.emptyTitle')}</Text>
             <Text style={styles.emptyDesc}>
-              매일 반복할 습관을 만들어{'\n'}작은 성취를 쌓아가세요
+              {t('home.emptyDesc')}
             </Text>
             <TouchableOpacity
               style={styles.emptyBtn}
               onPress={() => router.push('/add-routine')}
             >
-              <Text style={styles.emptyBtnText}>+ 첫 루틴 추가하기</Text>
+              <Text style={styles.emptyBtnText}>{t('home.emptyButton')}</Text>
             </TouchableOpacity>
           </View>
         )}
