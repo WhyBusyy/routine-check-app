@@ -69,7 +69,7 @@ const en = {
     streakDays: '%{count}d',
   },
   heatmap: {
-    totalDays: '%{count} days',
+    totalDays: { one: '%{count} day', other: '%{count} days' },
     totalLabel: 'Total done',
     longestLabel: 'Best streak',
     rateLabel: 'Rate',
