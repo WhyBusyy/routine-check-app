@@ -77,18 +77,6 @@ async function ourScheduled() {
   return all.filter((s) => (s.content.data as any)?.routineId)
 }
 
-export async function cancelRoutineDay(routineId: string, dateStr: string): Promise<void> {
-  const list = await ourScheduled()
-  await Promise.all(
-    list
-      .filter((s) => {
-        const d = s.content.data as any
-        return d.routineId === routineId && d.dateStr === dateStr
-      })
-      .map((s) => Notifications.cancelScheduledNotificationAsync(s.identifier)),
-  )
-}
-
 export async function cancelAllForRoutine(routineId: string): Promise<void> {
   const list = await ourScheduled()
   await Promise.all(
