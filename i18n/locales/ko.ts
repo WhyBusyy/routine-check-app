@@ -69,6 +69,10 @@ const ko = {
     notifOff: '알림 꺼짐',
     streakDays: '%{count}일',
   },
+  notification: {
+    title: '루틴 체크',
+    body: '%{emoji} %{name} 할 시간이에요!',
+  },
   heatmap: {
     totalDays: '%{count}일',
     totalLabel: '총 완료',

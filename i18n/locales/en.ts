@@ -68,6 +68,10 @@ const en = {
     notifOff: 'Off',
     streakDays: '%{count}d',
   },
+  notification: {
+    title: 'Routine Check',
+    body: '%{emoji} %{name} — time to check in!',
+  },
   heatmap: {
     totalDays: { one: '%{count} day', other: '%{count} days' },
     totalLabel: 'Total done',
