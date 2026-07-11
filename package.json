@@ -6,7 +6,8 @@
     "start": "expo start",
     "ios": "expo run:ios",
     "android": "expo run:android",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "expo": "~52.0.0",
@@ -32,6 +33,8 @@
   },
   "devDependencies": {
     "@types/react": "~18.3.0",
+    "patch-package": "^8.0.1",
+    "postinstall-postinstall": "^2.1.0",
     "typescript": "~5.7.0"
   },
   "private": true
