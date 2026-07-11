@@ -5,6 +5,11 @@ const en = {
     delete: 'Delete',
     edit: 'Edit',
   },
+  settings: {
+    title: 'Settings',
+    language: 'Language',
+    systemDefault: 'System default',
+  },
 }
 
 export default en

@@ -6,6 +6,11 @@ const ko = {
     delete: '삭제',
     edit: '수정',
   },
+  settings: {
+    title: '설정',
+    language: '언어',
+    systemDefault: '시스템 기본',
+  },
 }
 
 export default ko
