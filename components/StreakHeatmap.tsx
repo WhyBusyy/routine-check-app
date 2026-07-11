@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import { t, i18n } from '../i18n'
+import { getWeekdayLabels } from '../utils/dateUtils'
 
 type Props = {
   data: { date: string; count: number }[]
@@ -11,8 +12,7 @@ const COLS = 12  // 12주
 const ROWS = 7   // 7일
 
 export default function StreakHeatmap({ data, color = '#4ade80' }: Props) {
-  // NOTE(T8): 요일 이름은 heatmap.dayNames 배열로 관리; T8에서 Intl 기반으로 교체 예정
-  const dayNames = i18n.t('heatmap.dayNames', { returnObjects: true }) as string[]
+  const dayNames = getWeekdayLabels(i18n.locale)
 
   // 데이터를 2D 그리드로 변환 (열 우선)
   const grid: { date: string; count: number }[][] = []

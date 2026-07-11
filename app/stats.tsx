@@ -10,7 +10,7 @@ import {
 import { useRouter } from 'expo-router'
 import Svg, { Rect } from 'react-native-svg'
 import { useRoutineStore } from '../store/routineStore'
-import { toDateString, getDateDaysAgo } from '../utils/dateUtils'
+import { toDateString, getDateDaysAgo, getWeekdayLabels } from '../utils/dateUtils'
 import { t, i18n } from '../i18n'
 
 type Tab = 'weekly' | 'monthly'
@@ -21,8 +21,7 @@ export default function StatsScreen() {
   const [tab, setTab] = useState<Tab>('weekly')
 
   // 주간 데이터: 최근 7일 일별 완료 수
-  // NOTE(T8): 요일 이름은 stats.dayNames 배열로 관리; T8에서 Intl 기반으로 교체 예정
-  const localizedDayNames = i18n.t('stats.dayNames', { returnObjects: true }) as string[]
+  const localizedDayNames = getWeekdayLabels(i18n.locale)
   const weeklyData = Array.from({ length: 7 }, (_, i) => {
     const d = new Date()
     d.setDate(d.getDate() - (6 - i))

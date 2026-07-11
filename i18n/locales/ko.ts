@@ -60,7 +60,6 @@ const ko = {
     legendHigh: '많음',
     routineRateTitle: '루틴별 달성률 (30일)',
     emptyStats: '루틴을 추가하면 통계가 표시됩니다',
-    dayNames: ['일', '월', '화', '수', '목', '금', '토'],
   },
   routine: {
     slotMorning: '아침',
@@ -75,7 +74,6 @@ const ko = {
     totalLabel: '총 완료',
     longestLabel: '최장 연속',
     rateLabel: '달성률',
-    dayNames: ['일', '월', '화', '수', '목', '금', '토'],
     legendLow: '적음',
     legendHigh: '많음',
   },

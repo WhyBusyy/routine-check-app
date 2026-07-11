@@ -1,5 +1,3 @@
-const DAYS = ['일', '월', '화', '수', '목', '금', '토'] as const
-
 /** Date 객체를 로컬 시간 기준 YYYY-MM-DD 형식으로 반환 */
 export function toDateString(date: Date): string {
   const year = date.getFullYear()
@@ -20,13 +18,23 @@ export function getDateDaysAgo(days: number): string {
   return toDateString(date)
 }
 
-/** YYYY-MM-DD → "4월 8일 화요일" 형식 */
-export function formatDate(dateStr: string): string {
+/** YYYY-MM-DD → 로케일에 맞는 "월 일 요일" 표기 */
+export function formatDate(dateStr: string, locale: string = 'ko'): string {
   const date = new Date(dateStr + 'T00:00:00')
-  const month = date.getMonth() + 1
-  const day = date.getDate()
-  const dayOfWeek = DAYS[date.getDay()]
-  return `${month}월 ${day}일 ${dayOfWeek}요일`
+  return new Intl.DateTimeFormat(locale, {
+    month: 'long',
+    day: 'numeric',
+    weekday: 'long',
+  }).format(date)
+}
+
+/** 로케일에 맞는 요일 약칭 배열(일요일 시작, 7개) */
+export function getWeekdayLabels(locale: string): string[] {
+  const fmt = new Intl.DateTimeFormat(locale, { weekday: 'short' })
+  // 2023-01-01은 일요일
+  return Array.from({ length: 7 }, (_, i) =>
+    fmt.format(new Date(Date.UTC(2023, 0, 1 + i))),
+  )
 }
 
 /** 스트릭 수에 따른 이모지 */

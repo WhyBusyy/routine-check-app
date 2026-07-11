@@ -17,7 +17,7 @@ import ProgressRing from '../components/ProgressRing'
 import StreakHeatmap from '../components/StreakHeatmap'
 import Confetti from '../components/Confetti'
 import { formatDate, getToday } from '../utils/dateUtils'
-import { t } from '../i18n'
+import { t, i18n } from '../i18n'
 
 const TIME_SLOTS = [
   { key: 'morning', labelKey: 'home.slotMorning' as const },
@@ -110,7 +110,7 @@ export default function HomeScreen() {
         {/* 헤더 */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.dateText}>{formatDate(today)}</Text>
+            <Text style={styles.dateText}>{formatDate(today, i18n.locale)}</Text>
             <Text style={styles.greeting}>
               {completed === total && total > 0
                 ? t('home.greetingDone')

@@ -59,7 +59,6 @@ const en = {
     legendHigh: 'High',
     routineRateTitle: 'Completion rate (30d)',
     emptyStats: 'Add routines to see your stats',
-    dayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
   },
   routine: {
     slotMorning: 'Morning',
@@ -74,7 +73,6 @@ const en = {
     totalLabel: 'Total done',
     longestLabel: 'Best streak',
     rateLabel: 'Rate',
-    dayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     legendLow: 'Low',
     legendHigh: 'High',
   },
