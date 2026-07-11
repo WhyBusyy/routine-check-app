@@ -10,12 +10,13 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { usePurchases } from '../hooks/usePurchases'
+import { t } from '../i18n'
 
 const FEATURES = [
-  { emoji: '📊', title: '상세 통계', desc: '주간/월간 분석, 루틴별 달성률' },
-  { emoji: '🔔', title: '맞춤 알림', desc: '시간대별 알림 커스텀 설정' },
-  { emoji: '🎨', title: '위젯 테마', desc: '위젯 디자인 커스터마이징' },
-  { emoji: '♾️', title: '무제한 루틴', desc: '루틴 개수 제한 없이 추가' },
+  { emoji: '📊', titleKey: 'paywall.featureStatsTitle', descKey: 'paywall.featureStatsDesc' },
+  { emoji: '🔔', titleKey: 'paywall.featureNotifTitle', descKey: 'paywall.featureNotifDesc' },
+  { emoji: '🎨', titleKey: 'paywall.featureThemeTitle', descKey: 'paywall.featureThemeDesc' },
+  { emoji: '♾️', titleKey: 'paywall.featureUnlimitedTitle', descKey: 'paywall.featureUnlimitedDesc' },
 ]
 
 export default function PaywallScreen() {
@@ -24,18 +25,18 @@ export default function PaywallScreen() {
 
   const handlePurchase = async () => {
     if (packages.length === 0) {
-      Alert.alert('현재 구매할 수 있는 상품이 없습니다')
+      Alert.alert(t('paywall.alertNoProducts'))
       return
     }
     try {
       const success = await purchase(packages[0])
       if (success) {
-        Alert.alert('구매 완료!', 'Pro 기능이 활성화되었습니다', [
-          { text: '확인', onPress: () => router.back() },
+        Alert.alert(t('paywall.alertPurchaseSuccessTitle'), t('paywall.alertPurchaseSuccessMsg'), [
+          { text: t('paywall.confirm'), onPress: () => router.back() },
         ])
       }
     } catch {
-      Alert.alert('구매 실패', '다시 시도해주세요')
+      Alert.alert(t('paywall.alertPurchaseFailTitle'), t('paywall.alertRetry'))
     }
   }
 
@@ -43,25 +44,28 @@ export default function PaywallScreen() {
     try {
       const success = await restore()
       if (success) {
-        Alert.alert('복원 완료!', 'Pro 기능이 활성화되었습니다', [
-          { text: '확인', onPress: () => router.back() },
+        Alert.alert(t('paywall.alertRestoreSuccessTitle'), t('paywall.alertRestoreSuccessMsg'), [
+          { text: t('paywall.confirm'), onPress: () => router.back() },
         ])
       } else {
-        Alert.alert('복원할 구매 내역이 없습니다')
+        Alert.alert(t('paywall.alertRestoreNone'))
       }
     } catch {
-      Alert.alert('복원 실패', '다시 시도해주세요')
+      Alert.alert(t('paywall.alertRestoreFailTitle'), t('paywall.alertRetry'))
     }
   }
 
-  const priceText = packages.length > 0
+  // priceString comes from RevenueCat — do NOT translate; store already localises it.
+  const priceString = packages.length > 0
     ? packages[0].product.priceString
     : '...'
 
   const periodText = packages.length > 0
-    ? (packages[0].packageType === 'MONTHLY' ? '/월' :
-       packages[0].packageType === 'ANNUAL' ? '/년' : '')
+    ? (packages[0].packageType === 'MONTHLY' ? t('paywall.periodMonthly') :
+       packages[0].packageType === 'ANNUAL'   ? t('paywall.periodAnnual')  : '')
     : ''
+
+  const priceWithPeriod = `${priceString}${periodText}`
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -77,10 +81,8 @@ export default function PaywallScreen() {
         {/* 헤더 */}
         <View style={styles.header}>
           <Text style={styles.badge}>PRO</Text>
-          <Text style={styles.title}>루틴 체크 Pro</Text>
-          <Text style={styles.subtitle}>
-            더 깊은 분석과 커스텀 기능으로{'\n'}루틴 관리를 한 단계 업그레이드
-          </Text>
+          <Text style={styles.title}>{t('paywall.title')}</Text>
+          <Text style={styles.subtitle}>{t('paywall.subtitle')}</Text>
         </View>
 
         {/* 기능 목록 */}
@@ -89,8 +91,8 @@ export default function PaywallScreen() {
             <View key={i} style={styles.featureRow}>
               <Text style={styles.featureEmoji}>{feature.emoji}</Text>
               <View style={styles.featureInfo}>
-                <Text style={styles.featureTitle}>{feature.title}</Text>
-                <Text style={styles.featureDesc}>{feature.desc}</Text>
+                <Text style={styles.featureTitle}>{t(feature.titleKey)}</Text>
+                <Text style={styles.featureDesc}>{t(feature.descKey)}</Text>
               </View>
             </View>
           ))}
@@ -107,7 +109,7 @@ export default function PaywallScreen() {
               <ActivityIndicator color="#000" />
             ) : (
               <Text style={styles.purchaseBtnText}>
-                {priceText}{periodText}으로 시작하기
+                {t('paywall.ctaStart', { priceWithPeriod })}
               </Text>
             )}
           </TouchableOpacity>
@@ -116,7 +118,7 @@ export default function PaywallScreen() {
             style={styles.restoreBtn}
             onPress={handleRestore}
           >
-            <Text style={styles.restoreBtnText}>구매 복원</Text>
+            <Text style={styles.restoreBtnText}>{t('paywall.restore')}</Text>
           </TouchableOpacity>
         </View>
       </View>
