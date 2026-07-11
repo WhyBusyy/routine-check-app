@@ -68,6 +68,10 @@ const locale = {
     notifOff: 'Desligado',
     streakDays: '%{count} d',
   },
+  notification: {
+    title: 'Routine Check',
+    body: '%{emoji} %{name} — hora de marcar!',
+  },
   heatmap: {
     totalDays: { one: '%{count} dia', other: '%{count} dias' },
     totalLabel: 'Total concluído',

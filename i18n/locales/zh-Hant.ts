@@ -68,6 +68,10 @@ const locale = {
     notifOff: '提醒關閉',
     streakDays: '%{count}天',
   },
+  notification: {
+    title: '習慣打卡',
+    body: '%{emoji} %{name} 該打卡了！',
+  },
   heatmap: {
     totalDays: '%{count}天',
     totalLabel: '總完成',

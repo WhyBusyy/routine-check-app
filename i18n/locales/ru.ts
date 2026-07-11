@@ -73,6 +73,10 @@ const locale = {
     notifOff: 'Выкл',
     streakDays: '%{count}д',
   },
+  notification: {
+    title: 'Routine Check',
+    body: '%{emoji} %{name} — время отметить привычку!',
+  },
   heatmap: {
     totalDays: {
       one: '%{count} день',

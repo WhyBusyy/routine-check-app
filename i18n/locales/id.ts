@@ -68,6 +68,10 @@ const locale = {
     notifOff: 'Nonaktif',
     streakDays: '%{count}h',
   },
+  notification: {
+    title: 'Routine Check',
+    body: '%{emoji} %{name} — saatnya centang!',
+  },
   heatmap: {
     totalDays: '%{count} hari',
     totalLabel: 'Total selesai',

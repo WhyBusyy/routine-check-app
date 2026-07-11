@@ -68,6 +68,10 @@ const locale = {
     notifOff: 'Tắt',
     streakDays: '%{count}n',
   },
+  notification: {
+    title: 'Routine Check',
+    body: '%{emoji} %{name} — đến giờ check-in rồi!',
+  },
   heatmap: {
     totalDays: '%{count} ngày',
     totalLabel: 'Tổng hoàn thành',

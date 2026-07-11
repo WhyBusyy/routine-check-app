@@ -68,6 +68,10 @@ const locale = {
     notifOff: '通知オフ',
     streakDays: '%{count}日',
   },
+  notification: {
+    title: 'ルーティンチェック',
+    body: '%{emoji} %{name} の時間です！',
+  },
   heatmap: {
     totalDays: '%{count}日',
     totalLabel: '合計完了',
