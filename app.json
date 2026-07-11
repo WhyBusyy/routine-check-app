@@ -32,6 +32,9 @@
       "expo-font",
       "expo-localization"
     ],
+    "locales": {
+      "en": "./assets/locales/en.json"
+    },
     "extra": {
       "router": {
         "origin": false
