@@ -61,6 +61,23 @@ const en = {
     emptyStats: 'Add routines to see your stats',
     dayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
   },
+  routine: {
+    slotMorning: 'Morning',
+    slotAfternoon: 'Afternoon',
+    slotEvening: 'Evening',
+    slotAnytime: 'Anytime',
+    notifOff: 'Off',
+    streakDays: '%{count}d',
+  },
+  heatmap: {
+    totalDays: '%{count} days',
+    totalLabel: 'Total done',
+    longestLabel: 'Best streak',
+    rateLabel: 'Rate',
+    dayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    legendLow: 'Low',
+    legendHigh: 'High',
+  },
   paywall: {
     title: 'Routine Check Pro',
     subtitle: 'Deeper analytics and custom features\nto level up your routine management',

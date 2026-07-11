@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, Text, StyleSheet, ScrollView } from 'react-native'
+import { t, i18n } from '../i18n'
 
 type Props = {
   data: { date: string; count: number }[]
@@ -10,6 +11,9 @@ const COLS = 12  // 12주
 const ROWS = 7   // 7일
 
 export default function StreakHeatmap({ data, color = '#4ade80' }: Props) {
+  // NOTE(T8): 요일 이름은 heatmap.dayNames 배열로 관리; T8에서 Intl 기반으로 교체 예정
+  const dayNames = i18n.t('heatmap.dayNames', { returnObjects: true }) as string[]
+
   // 데이터를 2D 그리드로 변환 (열 우선)
   const grid: { date: string; count: number }[][] = []
   for (let col = 0; col < COLS; col++) {
@@ -42,18 +46,18 @@ export default function StreakHeatmap({ data, color = '#4ade80' }: Props) {
     <View style={styles.container}>
       <View style={styles.stats}>
         <View style={styles.statItem}>
-          <Text style={styles.statVal}>{totalChecked}일</Text>
-          <Text style={styles.statLabel}>총 완료</Text>
+          <Text style={styles.statVal}>{t('heatmap.totalDays', { count: totalChecked })}</Text>
+          <Text style={styles.statLabel}>{t('heatmap.totalLabel')}</Text>
         </View>
         <View style={styles.statItem}>
-          <Text style={styles.statVal}>{longestStreak}일</Text>
-          <Text style={styles.statLabel}>최장 연속</Text>
+          <Text style={styles.statVal}>{t('heatmap.totalDays', { count: longestStreak })}</Text>
+          <Text style={styles.statLabel}>{t('heatmap.longestLabel')}</Text>
         </View>
         <View style={styles.statItem}>
           <Text style={styles.statVal}>
             {data.length > 0 ? Math.round((totalChecked / data.length) * 100) : 0}%
           </Text>
-          <Text style={styles.statLabel}>달성률</Text>
+          <Text style={styles.statLabel}>{t('heatmap.rateLabel')}</Text>
         </View>
       </View>
 
@@ -61,7 +65,7 @@ export default function StreakHeatmap({ data, color = '#4ade80' }: Props) {
         <View style={styles.grid}>
           {/* 요일 라벨 */}
           <View style={styles.dayLabels}>
-            {['일', '월', '화', '수', '목', '금', '토'].map((d, i) => (
+            {dayNames.map((d, i) => (
               <Text key={i} style={styles.dayLabel}>{d}</Text>
             ))}
           </View>
@@ -88,7 +92,7 @@ export default function StreakHeatmap({ data, color = '#4ade80' }: Props) {
       </ScrollView>
 
       <View style={styles.legend}>
-        <Text style={styles.legendLabel}>적음</Text>
+        <Text style={styles.legendLabel}>{t('heatmap.legendLow')}</Text>
         {[0, 0.3, 0.6, 1].map((opacity, i) => (
           <View
             key={i}
@@ -100,7 +104,7 @@ export default function StreakHeatmap({ data, color = '#4ade80' }: Props) {
             ]}
           />
         ))}
-        <Text style={styles.legendLabel}>많음</Text>
+        <Text style={styles.legendLabel}>{t('heatmap.legendHigh')}</Text>
       </View>
     </View>
   )

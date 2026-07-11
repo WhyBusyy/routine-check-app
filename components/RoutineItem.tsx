@@ -12,6 +12,7 @@ import { useRoutineStore, Routine } from '../store/routineStore'
 import { getToday, streakEmoji } from '../utils/dateUtils'
 import { useRoutineActions } from '../hooks/useRoutineActions'
 import { getEffectiveTime, formatTime } from '../utils/notifications'
+import { t } from '../i18n'
 
 type Props = {
   routine: Routine
@@ -21,13 +22,6 @@ type Props = {
   onTap?: () => void
 }
 
-const TIME_SLOT_LABEL: Record<Routine['timeSlot'], string> = {
-  morning: '아침',
-  afternoon: '오후',
-  evening: '저녁',
-  anytime: '언제든',
-}
-
 export default function RoutineItem({ routine, onLongPress, onEdit, onDelete, onTap }: Props) {
   const { isChecked, toggleCheck, getStreak } = useRoutineStore()
   const today = getToday()
@@ -35,6 +29,14 @@ export default function RoutineItem({ routine, onLongPress, onEdit, onDelete, on
   const streak = getStreak(routine.id)
   const { toggleRoutineNotification } = useRoutineActions()
   const effectiveTime = getEffectiveTime(routine.timeSlot, routine.customTime)
+
+  // 슬롯 레이블 맵: 렌더 시 t()를 호출해야 언어 전환이 즉시 반영된다.
+  const TIME_SLOT_LABEL: Record<Routine['timeSlot'], string> = {
+    morning: t('routine.slotMorning'),
+    afternoon: t('routine.slotAfternoon'),
+    evening: t('routine.slotEvening'),
+    anytime: t('routine.slotAnytime'),
+  }
 
   const scaleAnim = useRef(new Animated.Value(1)).current
   const swipeableRef = useRef<Swipeable>(null)
@@ -76,7 +78,7 @@ export default function RoutineItem({ routine, onLongPress, onEdit, onDelete, on
           onEdit?.()
         }}
       >
-        <Text style={styles.swipeBtnText}>수정</Text>
+        <Text style={styles.swipeBtnText}>{t('common.edit')}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.swipeBtn, styles.deleteBtn]}
@@ -85,7 +87,7 @@ export default function RoutineItem({ routine, onLongPress, onEdit, onDelete, on
           onDelete?.()
         }}
       >
-        <Text style={styles.swipeBtnText}>삭제</Text>
+        <Text style={styles.swipeBtnText}>{t('common.delete')}</Text>
       </TouchableOpacity>
     </View>
   )
@@ -138,7 +140,7 @@ export default function RoutineItem({ routine, onLongPress, onEdit, onDelete, on
                   {TIME_SLOT_LABEL[routine.timeSlot]}
                   {routine.notificationEnabled
                     ? ` · ${formatTime(effectiveTime.hour, effectiveTime.minute)}`
-                    : ' · 알림 꺼짐'}
+                    : ` · ${t('routine.notifOff')}`}
                 </Text>
               </View>
             </View>
@@ -148,7 +150,7 @@ export default function RoutineItem({ routine, onLongPress, onEdit, onDelete, on
             {streak > 0 && (
               <View style={styles.streak}>
                 <Text style={styles.streakEmoji}>{streakEmoji(streak)}</Text>
-                <Text style={styles.streakCount}>{streak}일</Text>
+                <Text style={styles.streakCount}>{t('routine.streakDays', { count: streak })}</Text>
               </View>
             )}
             <TouchableOpacity onPress={handleBellPress} hitSlop={8}>

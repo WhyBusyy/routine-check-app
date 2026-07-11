@@ -62,6 +62,23 @@ const ko = {
     emptyStats: '루틴을 추가하면 통계가 표시됩니다',
     dayNames: ['일', '월', '화', '수', '목', '금', '토'],
   },
+  routine: {
+    slotMorning: '아침',
+    slotAfternoon: '오후',
+    slotEvening: '저녁',
+    slotAnytime: '언제든',
+    notifOff: '알림 꺼짐',
+    streakDays: '%{count}일',
+  },
+  heatmap: {
+    totalDays: '%{count}일',
+    totalLabel: '총 완료',
+    longestLabel: '최장 연속',
+    rateLabel: '달성률',
+    dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+    legendLow: '적음',
+    legendHigh: '많음',
+  },
   paywall: {
     title: '루틴 체크 Pro',
     subtitle: '더 깊은 분석과 커스텀 기능으로\n루틴 관리를 한 단계 업그레이드',
