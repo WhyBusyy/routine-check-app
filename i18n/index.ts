@@ -37,6 +37,18 @@ export const i18n = new I18n({
 i18n.enableFallback = true
 i18n.defaultLocale = 'en'
 
+// i18n-js는 기본으로 영어 복수 규칙(one/other)만 쓴다. 러시아어는 CLDR 규칙
+// (one/few/many/other)을 등록해야 ru.ts의 few/many 형태가 실제로 선택된다.
+i18n.pluralization.register('ru', (_i18n, count) => {
+  const mod10 = count % 10
+  const mod100 = count % 100
+  if (mod10 === 1 && mod100 !== 11) return ['one']
+  if (mod10 >= 2 && mod10 <= 4 && !(mod100 >= 12 && mod100 <= 14)) return ['few']
+  if (mod10 === 0 || (mod10 >= 5 && mod10 <= 9) || (mod100 >= 11 && mod100 <= 14))
+    return ['many']
+  return ['other']
+})
+
 export function resolveDeviceLocale(): SupportedLocale {
   const first = Localization.getLocales()[0]
   if (!first) return 'en'
