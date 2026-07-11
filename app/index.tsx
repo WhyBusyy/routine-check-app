@@ -197,6 +197,7 @@ export default function HomeScreen() {
                     <StreakHeatmap
                       data={heatmapData}
                       color={routine.color}
+                      onPress={() => router.push('/edit-history?id=' + routine.id)}
                     />
                   </View>
                 )}

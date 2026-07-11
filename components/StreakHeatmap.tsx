@@ -1,17 +1,18 @@
 import React from 'react'
-import { View, Text, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import { t, i18n } from '../i18n'
 import { getWeekdayLabels } from '../utils/dateUtils'
 
 type Props = {
   data: { date: string; count: number }[]
   color?: string
+  onPress?: () => void
 }
 
 const COLS = 12  // 12주
 const ROWS = 7   // 7일
 
-export default function StreakHeatmap({ data, color = '#4ade80' }: Props) {
+export default function StreakHeatmap({ data, color = '#4ade80', onPress }: Props) {
   const dayNames = getWeekdayLabels(i18n.locale)
 
   // 데이터를 2D 그리드로 변환 (열 우선)
@@ -43,7 +44,7 @@ export default function StreakHeatmap({ data, color = '#4ade80' }: Props) {
   })()
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={0.9}>
       <View style={styles.stats}>
         <View style={styles.statItem}>
           <Text style={styles.statVal}>{t('heatmap.totalDays', { count: totalChecked })}</Text>
@@ -106,7 +107,7 @@ export default function StreakHeatmap({ data, color = '#4ade80' }: Props) {
         ))}
         <Text style={styles.legendLabel}>{t('heatmap.legendHigh')}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 
