@@ -1,122 +1,44 @@
 import { useCallback } from 'react'
 import { useRoutineStore, Routine } from '../store/routineStore'
-import {
-  requestPermissions,
-  scheduleRoutineNotification,
-  cancelRoutineNotification,
-  getEffectiveTime,
-} from '../utils/notifications'
+import { requestPermissions, cancelAllForRoutine } from '../utils/notifications'
 
 export function useRoutineActions() {
-  const { addRoutine, updateRoutine, removeRoutine, routines } = useRoutineStore()
+  const { addRoutine, updateRoutine, removeRoutine } = useRoutineStore()
 
   const addRoutineWithNotification = useCallback(
-    async (data: Omit<Routine, 'id' | 'createdAt' | 'notificationId'>) => {
+    async (data: Omit<Routine, 'id' | 'createdAt'>) => {
       addRoutine(data)
-
-      const newRoutines = useRoutineStore.getState().routines
-      const newRoutine = newRoutines[newRoutines.length - 1]
-      if (!newRoutine) return
-
-      if (newRoutine.notificationEnabled) {
-        const granted = await requestPermissions()
-        if (granted) {
-          const { hour, minute } = getEffectiveTime(
-            newRoutine.timeSlot,
-            newRoutine.customTime,
-          )
-          const notificationId = await scheduleRoutineNotification(
-            newRoutine.id,
-            newRoutine.emoji,
-            newRoutine.name,
-            hour,
-            minute,
-          )
-          updateRoutine(newRoutine.id, { notificationId })
-        }
-      }
+      if (data.notificationEnabled) await requestPermissions()
+      // 실제 예약은 useNotificationSync가 스토어 변경을 감지해 재조정한다.
     },
-    [addRoutine, updateRoutine],
+    [addRoutine],
   )
 
   const updateRoutineWithNotification = useCallback(
     async (id: string, updates: Partial<Omit<Routine, 'id' | 'createdAt'>>) => {
-      const routine = routines.find((r) => r.id === id)
-      if (!routine) return
-
-      if (routine.notificationId) {
-        await cancelRoutineNotification(routine.notificationId)
-      }
-
-      // routine 존재가 위 guard로 보장됨
-      const merged = { ...routine, ...updates } as Routine
-      let notificationId: string | undefined
-
-      if (merged.notificationEnabled) {
-        const granted = await requestPermissions()
-        if (granted) {
-          const { hour, minute } = getEffectiveTime(
-            merged.timeSlot,
-            merged.customTime,
-          )
-          notificationId = await scheduleRoutineNotification(
-            id,
-            merged.emoji,
-            merged.name,
-            hour,
-            minute,
-          )
-        }
-      }
-
-      updateRoutine(id, { ...updates, notificationId })
+      updateRoutine(id, updates)
+      if (updates.notificationEnabled) await requestPermissions()
     },
-    [updateRoutine, routines],
+    [updateRoutine],
   )
 
   const removeRoutineWithNotification = useCallback(
     async (id: string) => {
-      const routine = routines.find((r) => r.id === id)
-      if (routine?.notificationId) {
-        await cancelRoutineNotification(routine.notificationId)
-      }
+      await cancelAllForRoutine(id)
       removeRoutine(id)
     },
-    [removeRoutine, routines],
+    [removeRoutine],
   )
 
   const toggleRoutineNotification = useCallback(
     async (id: string) => {
-      const routine = routines.find((r) => r.id === id)
+      const routine = useRoutineStore.getState().routines.find((r) => r.id === id)
       if (!routine) return
-
       const nextEnabled = !routine.notificationEnabled
-
-      if (routine.notificationId) {
-        await cancelRoutineNotification(routine.notificationId)
-      }
-
-      let notificationId: string | undefined
-      if (nextEnabled) {
-        const granted = await requestPermissions()
-        if (granted) {
-          const { hour, minute } = getEffectiveTime(
-            routine.timeSlot,
-            routine.customTime,
-          )
-          notificationId = await scheduleRoutineNotification(
-            id,
-            routine.emoji,
-            routine.name,
-            hour,
-            minute,
-          )
-        }
-      }
-
-      updateRoutine(id, { notificationEnabled: nextEnabled, notificationId })
+      if (nextEnabled) await requestPermissions()
+      updateRoutine(id, { notificationEnabled: nextEnabled })
     },
-    [updateRoutine, routines],
+    [updateRoutine],
   )
 
   return {

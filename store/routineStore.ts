@@ -19,7 +19,6 @@ export type Routine = {
   color: string
   createdAt: string
   notificationEnabled: boolean
-  notificationId?: string
   customTime?: { hour: number; minute: number }
 }
 
